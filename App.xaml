@@ -3,4 +3,43 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:Werewolf"
              StartupUri="Views/MainWindow.xaml">
+    <Application.Resources>
+        <Style TargetType="{x:Type Image}">
+            <Setter Property="RenderOptions.BitmapScalingMode" Value="NearestNeighbor" />
+        </Style>
+
+        <Style TargetType="{x:Type Control}">
+            <Setter Property="FontSize" Value="14px" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+
+        <Style TargetType="{x:Type TextBlock}">
+            <Setter Property="FontSize" Value="14px" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+
+        <Style x:Key="Title" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
+            <Setter Property="FontSize" Value="22px" />
+            <Setter Property="FontWeight" Value="Bold" />
+        </Style>
+
+        <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource {x:Type Control}}">
+            <Setter Property="Height" Value="32px" />
+            <Setter Property="Padding" Value="2px 0" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+        </Style>
+
+        <Style TargetType="{x:Type RichTextBox}" BasedOn="{StaticResource {x:Type Control}}">
+            <Setter Property="Padding" Value="2px 4px" />
+        </Style>
+
+        <Style TargetType="{x:Type RadioButton}" BasedOn="{StaticResource {x:Type Control}}">
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+        </Style>
+
+        <Style TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Control}}">
+            <Setter Property="Width" Value="128px" />
+            <Setter Property="Height" Value="32px" />
+        </Style>
+    </Application.Resources>
 </Application>

@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
 
 namespace Werewolf.Views
 {
@@ -10,6 +11,12 @@ namespace Werewolf.Views
         public MainWindow()
         {
             InitializeComponent();
+            SetView(new GameView(this));
+        }
+
+        public void SetView(UserControl view)
+        {
+            Main.Child = view;
         }
     }
 }

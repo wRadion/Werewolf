@@ -10,42 +10,14 @@
         Icon="/Resources/Images/werewolf.png"
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize"
-        SizeToContent="Height"
-        Width="360px">
-    <Window.Resources>
-        <converters:BooleanToOpacityConverter x:Key="BoolToOpacity" />
-    </Window.Resources>
+        Width="720px" Height="540px">
+    <Window.Background>
+        <SolidColorBrush Color="White" Opacity="1" />
+    </Window.Background>
 
-    <StackPanel HorizontalAlignment="Center" Margin="16px">
-        <Image Source="/Resources/Images/werewolf.png" Width="128px" Height="128px" Margin="0 0 0 8px" />
-        <TextBlock Text="Loup-garous de Thiercelieux" FontSize="22px" FontWeight="Bold" HorizontalAlignment="Center" />
-        <RadioButton x:Name="RoomConnect" Content="Se connecter à un salon" GroupName="Room" Margin="0 24px 0 8px" VerticalContentAlignment="Center" />
-        <Border IsEnabled="{Binding ElementName=RoomConnect, Path=IsChecked}"
-                Opacity="{Binding ElementName=RoomConnect, Path=IsChecked, Converter={StaticResource BoolToOpacity}}"
-                CornerRadius="5"
-                Margin="0 0 0 8px" Padding="16px" Background="#EEE">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="auto" />
-                    <RowDefinition Height="auto" />
-                </Grid.RowDefinitions>
-
-                <TextBlock Grid.Column="0" Grid.Row="0" Text="Adresse IP du salon :" VerticalAlignment="Center" />
-                <TextBox x:Name="RoomIPAddress" Grid.Column="1" Grid.Row="0" Width="128px" Padding="0 4px" VerticalAlignment="Center" />
-                <Button x:Name="RoomConnectBtn" Grid.Column="1" Grid.Row="1" Content="Se connecter" Width="128px" Margin="0 8px 0 0" Padding="4px" />
-            </Grid>
-        </Border>
-        <RadioButton x:Name="RoomCreate" Content="Créer un nouveau salon" GroupName="Room" VerticalContentAlignment="Center" />
-        <Border IsEnabled="{Binding ElementName=RoomCreate, Path=IsChecked}"
-                Opacity="{Binding ElementName=RoomCreate, Path=IsChecked, Converter={StaticResource BoolToOpacity}}"
-                CornerRadius="5"
-                Margin="0 8px 0 8px" Padding="16px" Background="#EEE">
-            <Button x:Name="RoomCreateBtn" Content="Créer un salon" Width="128px" Padding="4px" />
-        </Border>
-    </StackPanel>
+    <Border x:Name="Main">
+        <Border.Background>
+            <SolidColorBrush Color="AntiqueWhite" Opacity="0" />
+        </Border.Background>
+    </Border>
 </Window>
