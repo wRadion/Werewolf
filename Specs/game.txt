@@ -1,0 +1,79 @@
+Loup-garou (pseudo code)
+========================
+
+(partie réseau)
+
+JOUEURS = clients connectés sur le serveur
+EQUIPES = villageois, loup-garous
+ROLES = maître du jeu (hôte) choisi les rôles qu'il y aura dans le jeu
+
+AssignerLesRoles(joueurs) - assigner les rôles aléatoirement
+	X faire devenir un joueur, un role
+
+
+TANT QUE (aucune EQUIPES n'a gagné)
+	Phase = Nuit
+		X envoyer un message aux joueurs "C'est la nuit blablabla"
+		
+		X Sous-phase = Cupidon (si première nuit)
+			- RéveilleCupidon() - faire l'action de cupidon
+				X démarrer un timer de X secondes
+					X désigne 2 joueurs (il peut se désigner lui-même)
+					X envoyer un message aux deux joueurs : "Vous êtes amoureux de <joueur>, il est <role>"
+				SI le timer est fini
+					- sauter le tour
+		
+		X Sous-phase = Voyante (si elle est vivante)
+			- RéveilleVoyante() - faire l'action de la voyante
+				X démarrer un timer de X secondes
+					X désigne 1 joueur
+					X envoyer un message à la voyante: "Le rôle de <joueur> est <role>".
+				SI le timer est fini
+					- sauter le tour
+		X Sous-phase = Loup-Garous
+			- RéveilleLoupGarous() - faire l'action des loup-garous
+				X démarrer un timer de X secondes
+					- activer le tchat loup-garous (+ petite-fille)
+					X votes pour 1 joueur
+				SI le timer est fini
+					X tagger le joueur qui a le plus de vote, comme victime des loup-garous
+					SI égalité = random (sauf les loup-garous)
+		X Sous-phase = Sorcière (si elle est vivante)
+			- RéveilleSorcière() - faire l'action de la sorcière
+				X démarrer un timer de X secondes
+					X envoyer un message à la sorcière: "Le joueur <joueur> est la victime"
+					- choisi, puis stop timer si choisi:
+						- ne rien faire
+						- utiliser (ou non) potion de guérison sur la victime
+						- utiliser (ou non) potion d'empoisonement sur un joueur de son choix
+							X tagger le joueur désigné comme victime de la sorcière
+				SI le timer est fini
+					- choisi "ne rien faire"
+	
+	Phase = Jour
+		X envoyer un message aux joueurs "C'est le jour blablabla"
+		X faire mourir (tuer) les joueurs ciblés/taggés victime (loup-garous/sorcière)
+			- déclencher l'évènement [joueur mort]
+				SI maire = FaireActionMaire()
+					X désigne un joueur
+					X faire devienir le joueur, Maire
+				SI chasseur = FaireActionChasseur()
+					X désigne un joueur
+					X faire mourir ce joueur
+			X envoyer un message aux joueurs: les joueurs qui sont morts + leur rôle
+		X Sous-phase = Vote Maire (si premier jour)
+			X démarrer un timer de X secondes
+				X chaque joueur vote pour un autre joueur
+			SI le timer est fini, le joueur qui a le plus de voix est Maire
+				SI égalité
+					- random
+		X Sous-phase = Vote
+			X démarrer un timer de X secondes
+				X chaque joueur vote pour un autre joueur
+			SI le timer est fini, le joueur qui a le plus de voix est tué/lynché/pendu
+				SI égalité
+					- vote du Maire
+					SI Maire pas voté
+						- random
+			X faire mourir (tuer) le joueur
+FIN TANT QUE

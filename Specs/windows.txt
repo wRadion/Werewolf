@@ -1,0 +1,45 @@
+Fenêtres
+========
+
+SECTION PREPARATION/RESEAU
+==========================
+
+MainWindow (première fenêtre)
+	RadioButton
+	- Connexion à une "Room" avec l'adresse IP (et le port=9998)
+		=> l'adresse IP (textbox) s'affiche
+		=> le bouton "Connexion" s'affiche
+	- Création d'une "Room" (avec le port=9998)
+		=> le bouton "Création" s'affiche
+
+=> Connexion à une "Room"
+	=> ça se connecte à la "Room" en tant que Client
+	=> une fois connecté, on change la window => RoomWindow
+
+=> Création d'une "Room"
+	=> ça lance le serveur
+	=> ça se connecte à la "Room" en tant que Client
+	=> une fois connecté, on change la window => RoomWindow
+
+RoomWindow (fenêtre de la Room)
+	=> Tchat (chatbox, la liste des utilisateurs connectés, et un champs pour changer son pseudo)
+	=> Le serveur (Host)
+		- pourra paramétrer la partie (choisir les rôles, ...)
+			- sera visible (readonly) pour les clients
+		- aura un bouton "Démarrer la partie"
+
+=> Démarrage de la partie
+	=> un petit compte à rebourd de 10/5 secondes
+	=> une fois le compte à rebourd fini, change la window => GameWindow
+
+
+SECTION JEU (Partie)
+====================
+
+GameWindow (fenêtre principale du jeu, d'une partie de loup-garou)
+	=> Chatbox (informations du jeu, ....)
+	=> Envoyer des messages (disabled à certain moments)
+	=> Liste des utilisateurs
+		=> Ceux qui sont vivants, juste le pseudo
+		=> Ceux qui sont morts, y'aura le rôle ()
+		=> Les rôles restants

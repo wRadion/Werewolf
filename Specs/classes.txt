@@ -1,0 +1,52 @@
+Fonctionnalités (à partir des events)
+=====================================
+
+TODO (cas spéciaux):
+- gérer le cas où un joueur se déconnecte/perds la connexion
+	- envoyer un message à tous les joueurs
+	- tuer le joueur
+
+[Server] (PAS d'interface - NO UI)
+- Stocke tous les clients (mode Salon/Room)
+	- Nom
+	- Envoyer des events/messages
+	- Savoir si le client est connecté/déconnecté
+	- Ajouter/retirer un client
+
+- Stocke tous les joueurs (mode Partie/Game)
+	- Nom
+	- Envoyer des events/messages
+	- Tags (CRUD)
+	- Role
+		- Sorcière => savoir les potions qui ont été use
+	- Savoir si vivant/mort (=> tag?)
+	- Maire (=> tag?)
+	- Tuer le joueur
+		- vérifier si y'a pas une équipe gagnante
+	- Ajouter/retirer les votes
+
+[Client] (UI)
+mode Salon/Room
+- Les noms des clients (C-UD) (ListBox) (view)
+	- Read = Getter = no need (because UI)
+- Ajouter un message dans la ChatBox
+- Les settings de la partie (C-UD) (?)
+
+mode Partie/Game
+- Timers
+- Role du joueur
+- Ajouter un message dans la ChatBox
+- Les noms des joueurs (C-UD) (ListBox)
+- Setup/Unsetup interface selon les rôles/phase
+	- cupidon= désigner 2 joueurs
+	- voyante= désigner 1 joueur
+	- loup-garous= voter 1 joueur
+	- sorcière= choisir l'action
+			  - ne rien faire
+			  - potion de vie
+			  - potion de mort
+				- désigner 1 joueur
+	- vote maire= voter 1 joueur
+	- vote village= voter 1 joueur
+	- chasseur= désigner 1 joueur
+	- maire= désigner 1 joueur

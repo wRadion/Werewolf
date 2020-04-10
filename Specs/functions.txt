@@ -1,0 +1,34 @@
+Fonctionnalités:
+- Envoyer un message à un joueur (message, joueur)
+- Désigner un joueur (joueur, joueur)
+- Voter pour un joueur (joueur, joueur)
+- Faire Mourir/Tuer un joueur (source, joueur)
+							   source = Loup-garous, Sorcière, Chasseur, Votes, Amoureux
+- Faire Devenir/Assigner un rôle à un joueur (role, joueur)
+- Tagger un joueur (tag, joueur)
+- Démarrer un timer (secondes)
+- Définir la phase (Jour/Nuit)
+- Définir la sous-phase (Role specific, Vote)
+
+Classes:
+- Joueur (Player)
+	// static (fonctions de classes)
+	- Récupérer tous les joueurs :		Player.GetAll()
+	- Récupérer tous les joueurs (w/tag)Player.GetAllWithTag(Tag tag)
+	- Récupérer tous les joueurs (w/rol)Player.GetAllWithRole(Role role)
+
+	// 		  (fonctions d'instance = méthodes)
+	- Envoyer un message : 				player.SendChatMessage(string message)
+	- Désigner un joueur : 				player.Designate(Player target)
+	- Voter pour un joueur : 			player.Vote(Player target)
+	- Tuer un joueur : 					player.Kill(KillSource source)
+	- Assigner un rôle : 				player.SetRole(Role role)
+	- Tagger un joueur : 				player.Tag(Tag tag)
+	- Récupérer les tags :				player.GetTags()
+	- Check si un joueur est taggé :    player.HasTag(Tag tag)?
+- Compteur (Timer)
+	- Démarrer un timer : 				timer.Start(int seconds)
+	- Stopper un timer : 				timer.Stop()
+- Partie (Game)
+	- Définir la phase actuelle : 		game.SetCurrentPhase(Phase phase)
+	- Définir la sous-phase actuelle : 	game.SetCurrentSubPhase(SubPhase phase)
