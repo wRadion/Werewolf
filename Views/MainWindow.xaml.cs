@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using Werewolf.Classes.Room;
 
 namespace Werewolf.Views
 {
@@ -11,7 +12,14 @@ namespace Werewolf.Views
         public MainWindow()
         {
             InitializeComponent();
-            SetView(new GameView(this));
+
+            Closed += ((sender, e) =>
+            {
+                ClientRoom.Instance.Disconnect();
+                ServerRoom.Instance.Stop();
+            });
+
+            SetView(new MainView(this));
         }
 
         public void SetView(UserControl view)

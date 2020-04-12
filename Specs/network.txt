@@ -1,32 +1,40 @@
 Déroulement avant le début
 ==========================
 
-=> Changement de pseudo
+=> "Introduction"
+	=> Server => Client
+		USER_NAME_SET (temporaryName)
+	=> Server => Client
+		ROOM_USER_LIST_CHANGED (list)
+
+=> Room
 	=> Client => Server
 		=> CHANGE_NAME (oldname, newname)
 	=> Server => Clients (tous) (si le nom est valide)
 		=> USER_NAME_CHANGED (oldname, newname)
 
-=> Tchat
 	=> Client => Server
-		=> SEND_CHAT_MESSAGE (message)
+		=> CHAT_MESSAGE (message)
 	=> Server => Clients (tous)
-		=> USER_MESSAGE_SENT (name, message)
-		
-	=> Client => Server
-		=> JOIN_ROOM ()
+		=> ROOM_MESSAGE_SENT (name, message)
+
+	=> Client Connect To Server
 	=> Server => Clients (tous)
-		=> USER_ROOM_JOINED (name)
-		
-	=> Client => Server
-		=> LEAVE_ROOM ()
+		=> ROOM_USER_JOINED (name)
+
+	=> Client Disconnect From Server
 	=> Server => Clients (tous)
-		=> USER_ROOM_LEFT (name)
-		
+		=> ROOM_USER_LEFT (name)
+
+	=> Host change les paramètres
+	=> Client (host) => Server
+		=> CHANGE_GAME_SETTING (setting newvalue)
 	=> Server => Clients (tous)
 		=> GAME_SETTING_CHANGED (setting, newvalue)
-		
-=> Démarrage de la partie
+
+	=> Host clique sur "Lancer la partie"
+	=> Client (host) => Server
+		=> START_GAME ()
 	=> Server => Clients (tous)
 		=> GAME_STARTED ()
 
@@ -52,40 +60,40 @@ Wait? (10 sec)
 			=> SET_CUPID_LOVERS (name1, name2)
 		=> Server => Clients (name1, name2)
 			=> GAME_CUPID_LOVER_SET (other name)
-		
+
 		=> Server => Clients (tous)
 			=> GAME_CUPID_ASLEEP
-		
+
 	si voyante vivante
 	=> Action Voyante (+temps d'attente)
 		=> Server => Clients (tous)
 			=> GAME_SEER_AWOKEN
-			
+
 		=> Client (voyante) => Server
 			=> SET_SEER_TARGET (name)
 		=> Server => Client (voyante)
 			=> GAME_SEER_ROLE_REVEALED (name, role)
-			
+
 		=> Server => Clients (tous)
 			=> GAME_SEER_ASLEEP
-			
+
 	=> Action Loup-garous (+temps d'attente)
 		=> Server => Clients (tous)
 			=> GAME_WEREWOLVES_AWOKEN
-			
+
 		=> Client (chaque LG) => Server
 			=> ADD_VOTE (name)
 		=> Server => Clients (LGs)
 			=> GAME_VOTE_ADDED (source, target)
-		
+
 		=> Client (chaque LG) => Server
 			=> REMOVE_VOTE (name)
 		=> Server => Clients (LGs)
 			=> GAME_VOTE_REMOVED (source, target)
-					
+
 		=> Server => Clients (tous)
 			=> GAME_WEREWOLVES_ALSEEP
-		
+
 		Server TAG le name qui a le + de vote
 		=> Server => Clients (LGs)
 			=> GAME_WEREWOLVES_TARGET_SET (name)
@@ -94,15 +102,15 @@ Wait? (10 sec)
 	=> Action Sorcière (+temps d'attente)
 		=> Server => Clients (tous)
 			=> GAME_WITCH_AWOKEN
-		
+
 		=> Server => Client (sorcière)
 			=> GAME_WEREWOLF_TARGET_REVEALED (name)
 		=> Client (sorcière) => Server
 			=> SET_WITCH_ACTION (action, name)
-		
+
 		=> Server => Clients (tous)
 			=> GAME_WITCH_ASLEEP
-		
+
 		Server TAG le name en fonction de l'action
 		=> Server => Client (sorcière)
 			=> GAME_WITCH_ACTION_SET (action, name)
@@ -110,62 +118,62 @@ Wait? (10 sec)
 	=> Server "compile" tout les tags et ce qui s'est
 	   passé la nuit
 		=> gérer le cas des amoureux
-		
+
 	=> Server => Clients (tous)
 		=> GAME_PHASE_CHANGED (DAY)
-		
+
 	=> Server => Clients (tous)
 		=> pour chaque joueurs morts pendant la nuit
 			=> GAME_PLAYER_DIED (name, role, how?)
-				
+
 	si première journée
 	=> Server => Clients (tous)
 		=> GAME_MAYOR_ELECTION_STARTED
-		
+
 		=> Client (chaque vivants) => Server
 			=> ADD_VOTE (name)
 		=> Server => Clients (tous)
 			=> GAME_VOTE_ADDED (source, target)
-		
+
 		=> Client (chaque vivants) => Server
 			=> REMOVE_VOTE (name)
 		=> Server => Clients (tous)
 			=> GAME_VOTE_REMOVED (source, target)
-			
+
 		=> Server => Clients (tous)
 			=> GAME_MAYOR_ELECTION_ENDED
-		
+
 		Server va setter le maire
 		=> Server => Clients (tous)
 			=> GAME_MAYOR_CHANGED (name)
-			
+
 	=> Server => Clients (tous)
 		=> GAME_DAY_VOTE_STARTED ()
-		
+
 		=> Client (chaque vivants) => Server
 			=> ADD_VOTE (name)
 		=> Server => Clients (tous)
 			=> GAME_VOTE_ADDED (source, target)
-		
+
 		=> Client (chaque vivants) => Server
 			=> REMOVE_VOTE (name)
 		=> Server => Clients (tous)
 			=> GAME_VOTE_REMOVED (source, target)
-			
+
 		=> Server => Clients (tous)
 			=> GAME_DAY_VOTE_ENDED ()
-		
+
 		Server va tagger celui qui a le + de vote
 		=> Server => Clients (tous)
 			=> GAME_PLAYER_DIED (name, role, how=votedByVillage)
-			
+
 [GAME_PLAYER_DIED]
 si le maire est mort
 => Client (maire) => Server
 	=> SET_NEW_MAYOR (name)
 => Server => Clients (tous)
 	=> GAME_MAYOR_CHANGED (name)
-	
+
 si le chasseur est mort
 => Client (chasseur) => Server
 	=> SET_HUNTER_TARGET (name)

@@ -1,6 +1,8 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 
+using Werewolf.Classes.Room;
+
 namespace Werewolf.Views
 {
     /// <summary>
@@ -14,11 +16,13 @@ namespace Werewolf.Views
         {
             InitializeComponent();
             _window = window;
+
+            IPAddressText.Text = ClientRoom.Instance.IPAddressString;
         }
 
         private void SettingsBtn_Click(object sender, RoutedEventArgs e)
         {
-
+            new RoomSettingsWindow(_window).ShowDialog();
         }
 
         private void StartGame_Click(object sender, RoutedEventArgs e)

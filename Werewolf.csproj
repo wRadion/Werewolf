@@ -55,6 +55,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Classes\Room\ClientRoom.cs" />
+    <Compile Include="Classes\Game\ServerGame.cs" />
+    <Compile Include="Classes\Game\ServerGameClient.cs" />
+    <Compile Include="Classes\Room\ServerRoom.cs" />
+    <Compile Include="Classes\Room\ServerRoomClient.cs" />
     <Compile Include="Views\GameView.xaml.cs">
       <DependentUpon>GameView.xaml</DependentUpon>
     </Compile>
@@ -63,6 +68,9 @@
     </Compile>
     <Compile Include="Views\RoomView.xaml.cs">
       <DependentUpon>RoomView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\RoomSettingsWindow.xaml.cs">
+      <DependentUpon>RoomSettingsWindow.xaml</DependentUpon>
     </Compile>
     <Page Include="Views\GameView.xaml">
       <SubType>Designer</SubType>
@@ -86,6 +94,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Views\RoomView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\RoomSettingsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -117,10 +129,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Specs\events.txt" />
+    <Resource Include="Specs\network_events.txt" />
     <Resource Include="Specs\classes.txt" />
-    <Resource Include="Specs\functions.txt" />
-    <Resource Include="Specs\rules.txt" />
+    <Resource Include="Specs\classes_functions.txt" />
+    <Resource Include="Specs\game_rules.txt" />
     <Resource Include="Specs\network.txt" />
     <Resource Include="Specs\game.txt" />
     <Resource Include="Specs\windows.txt" />
@@ -132,20 +144,22 @@
     <Resource Include="Resources\Images\Icons\cog.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\Images\Icons\cog_edit.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\Images\Icons\email_go.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\Images\Icons\comment.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\Images\Icons\application_add.png" />
-    <Resource Include="Resources\Images\Icons\application_go.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Images\Icons\play.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\Icons\arrow_right.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\Icons\connect.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\Icons\arrow_left.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -1,0 +1,34 @@
+Jeux types Loup-garous:
+	Loup-garou de Thiercelieux (Jeu de société)
+	Mafia (Jeu de société)
+	Town of Salem (Steam)
+
+Boucle de jeu (Game loop) :
+	2 phases:
+		Phase Nuit
+			Les loup-garous peuvent discuter entre eux (tchat) à leur tour
+			Les joueurs faire une action (ou non) en fonction de leur rôle
+				Loup-garous : votes pour un joueur, le joueur qui a le plus de vote est
+							  désignée comme victime des loup-garous
+								=> au début de la prochaine journée, le joueur meurt
+				Voyante : elle choisi de regarder le rôle d'un joueur
+				Sorcière : elle a une potion de vie et une potion de mort (pendant toute la partie)
+					- Elle peut choisir d'utiliser aucun, une, ou les deux
+					- Elle connaît la victime des loup-garous
+					- La potion de vie ressuscite la victime des loup-garous
+					- La potion de mort tue un joueur au début de la prochaine journée
+				Cupidon : pendant la première nuit seulement
+					- Il désigne 2 joueurs, ces 2 joueurs sont amoureux
+				Petite fille : elle voit le tchat des loups-garous
+					- les noms des loup-garous sont remplacé par "Loup-garou 1"
+		Phase Jour
+			Le premier jour, élection du Maire
+				Maire : son vote compte double en cas d'égalité
+			Si rôle spécifique meurt pendant la nuit :
+			Les joueurs peuvent discuter librement (tchat)
+			Les joueurs décident de voter contre un joueur (de leur choix) pour le tuer/pendre
+
+Système d'évènement (à chaque fois que... quand...)
+	A chaque fois qu'un joueur meurt, son rôle est révélé
+		Chasseur : il choisi quelqu'un et le tue
+		Amoureux : l'autre joueur amoureux meurt

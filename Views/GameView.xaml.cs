@@ -8,7 +8,7 @@ namespace Werewolf.Views
     /// </summary>
     public partial class GameView : UserControl
     {
-        private MainWindow _window;
+        private readonly MainWindow _window;
 
         public GameView(MainWindow window)
         {

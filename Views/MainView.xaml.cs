@@ -1,6 +1,8 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 
+using Werewolf.Classes.Room;
+
 namespace Werewolf.Views
 {
     /// <summary>
@@ -16,14 +18,15 @@ namespace Werewolf.Views
             _window = window;
         }
 
-        private void RoomConnectBtn_Click(object sender, RoutedEventArgs e)
+        private void ConnectClient(string ipAddress = null)
         {
+            if (ipAddress == null)
+                ServerRoom.Instance.Start();
+            ClientRoom.Instance.Connect(ipAddress);
             _window.SetView(new RoomView(_window));
         }
 
-        private void RoomCreateBtn_Click(object sender, RoutedEventArgs e)
-        {
-            _window.SetView(new RoomView(_window));
-        }
+        private void RoomConnectBtn_Click(object sender, RoutedEventArgs e) => ConnectClient(RoomIPAddress.Text);
+        private void RoomCreateBtn_Click(object sender, RoutedEventArgs e) => ConnectClient();
     }
 }

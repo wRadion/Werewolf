@@ -1,0 +1,150 @@
+[Server]
+CHANGE_NAME (oldname, newname)
+	- Mettre à jour le nom côté serveur
+	- Envoyer à tous les clients
+		USER_NAME_CHANGED (oldname, newname)
+
+CHAT_MESSAGE (message)
+	- Envoyer à tous les clients
+		ROOM_MESSAGE_SENT (name, message)
+
+
+SET_CUPID_LOVERS (name1, name2)
+	- Check si l'action de cupidon n'a pas déjà été faite
+	- Tag name1 "LOVER" et name2 "LOVER" côté serveur
+	- Envoyer à name1 et name2
+		GAME_CUPID_LOVER_SET (other_name) (+role?)
+
+SET_SEER_TARGET (name)
+	- Check si name est vivant
+	- Envoyer à la voyante
+		GAME_SEER_ROLE_REVEALED (name, role)
+
+VOTE type = LG_TARGET, MAYOR_ELECTION, VILLAGE_VOTE
+
+ADD_VOTE (type, name)
+	- Check si name est vivant
+	- Ajoute un vote à name côté serveur
+	- Envoyer (en fonction du type) à certains clients
+		GAME_VOTE_ADDED (name)
+
+REMOVE_VOTE (type, name)
+	- Check si name est vivant
+	- Retire un vote à name côté serveur
+	- Envoyer (en fonction du type) à certains clients
+		GAME_VOTE_REMOVED (name)
+
+WITCH_ACTION = DO_NOTHING, DEATH_POTION, LIFE_POTION, BOTH_POTIONS
+
+SET_WITCH_ACTION (action, name)
+	- Check si name est vivant (si il y a)
+	- Check si l'action est faisable
+	- Tag name + Tag LG_TARGET (en fonction de l'action)
+
+SET_NEW_MAYOR (name)
+	- Check si name est vivant
+	- Check si y'a pas déjà un maire
+	- Tag name MAYOR
+	- Envoyer à tous les clients
+		GAME_MAYOR_CHANGED (name)
+
+SET_HUNTER_TARGET (name)
+	- Check si name est vivant
+	- Check si y'a pas déjà une autre target
+	- Envoyer à tous les clients
+		GAME_PLAYER_DIED (name, role, how=killedByHunter)
+
+[Client]
+USER_NAME_SET (name)
+	- Mettre à jour le nom côté client
+
+USER_NAME_CHANGED (oldname, newname)
+	- Mettre à jour le nom côté client
+
+ROOM_USER_LIST_CHANGED (list)
+	- Mettre à jour la liste des utilisateurs côté client
+
+ROOM_MESSAGE_SENT (name, message)
+	- Ajoute le message côté client
+
+ROOM_USER_JOINED (name)
+	- Ajoute le name de la liste des utilisateurs
+	- Ajoute un message côté client
+
+ROOM_USER_LEFT (name)
+	- Retire le name de la liste des utilisateurs
+	- Ajoute un message côté client
+
+GAME_SETTING_CHANGED (setting, newvalue)
+	- Mettre à jour le setting côté client
+
+GAME_STARTED ()
+	- Démarrer un timer côté client
+		- Affiche un message à chaque secondes
+	- Quand le timer est fini, change view => GameView
+
+GAME_ROLE_ASSIGNED (role)
+	- Mettre à jour le rôle côté client
+	- Ajoute un message côté client
+
+GAME_PHASE_CHANGED (phase)
+	- Ajoute un message côté client
+
+GAME_CUPID_AWOKEN ()
+	- Ajoute un message côté client
+GAME_CUPID_LOVER_SET (other name)
+	- Mettre à jour la couleur(?) de l'autre dans la liste
+	- Ajoute un message côté client
+GAME_CUPID_ASLEEP ()
+	- Ajoute un message côté client
+
+GAME_SEER_AWOKEN ()
+	- Ajoute un message côté client
+GAME_SEER_ROLE_REVEALED (name, role)
+	- Ajoute un message côté client
+GAME_SEER_ASLEEP ()
+	- Ajoute un message côté client
+
+GAME_WEREWOLVES_AWOKEN ()
+	- Setup l'interface pour voter (LGs)
+	- Ajoute un message côté client
+GAME_WEREWOLVES_TARGET_SET (name)
+	- Ajoute un message côté client
+GAME_WEREWOLVES_ALSEEP ()
+	- Unsetup l'interface pour voter (LGs)
+	- Ajoute un message côté client
+
+GAME_WITCH_AWOKEN ()
+	- Ajoute un message côté client
+GAME_WEREWOLF_TARGET_REVEALED (name)
+	- Indiquer à la sorcière la target des LGs (message?)
+GAME_WITCH_ACTION_SET (action, name)
+	- Ajoute un message côté client
+GAME_WITCH_ASLEEP ()
+	- Ajoute un message côté client
+
+GAME_MAYOR_ELECTION_STARTED ()
+	- Setup l'interface pour voter (Vivants)
+	- Ajoute un message côté client
+GAME_MAYOR_ELECTION_ENDED ()
+	- Unsetup l'interface pour voter (Vivants)
+GAME_MAYOR_CHANGED (name)
+	- Mettre à jour le name dans la liste
+	- Ajoute un message côté client
+
+GAME_DAY_VOTE_STARTED ()
+	- Setup l'interface pour voter (Vivants)
+	- Ajoute un message côté client
+GAME_DAY_VOTE_ENDED ()
+	- Unsetup l'interface pour voter (Vivants)
+	- Ajoute un message côté client
+
+GAME_PLAYER_DIED (name, role, how?)
+	- Mettre à jour le name dans la liste
+	- Ajoute un message côté client
+GAME_VOTE_ADDED (source, target)
+	- Mettre à jour le nombre de vote
+	- Ajoute un message côté client
+GAME_VOTE_REMOVED (source, target)
+	- Mettre à jour le nombre de vote
+	- Ajoute un message côté client

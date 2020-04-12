@@ -14,7 +14,7 @@ AssignerLesRoles(joueurs) - assigner les rôles aléatoirement
 TANT QUE (aucune EQUIPES n'a gagné)
 	Phase = Nuit
 		X envoyer un message aux joueurs "C'est la nuit blablabla"
-		
+
 		X Sous-phase = Cupidon (si première nuit)
 			- RéveilleCupidon() - faire l'action de cupidon
 				X démarrer un timer de X secondes
@@ -22,7 +22,7 @@ TANT QUE (aucune EQUIPES n'a gagné)
 					X envoyer un message aux deux joueurs : "Vous êtes amoureux de <joueur>, il est <role>"
 				SI le timer est fini
 					- sauter le tour
-		
+
 		X Sous-phase = Voyante (si elle est vivante)
 			- RéveilleVoyante() - faire l'action de la voyante
 				X démarrer un timer de X secondes
@@ -49,7 +49,7 @@ TANT QUE (aucune EQUIPES n'a gagné)
 							X tagger le joueur désigné comme victime de la sorcière
 				SI le timer est fini
 					- choisi "ne rien faire"
-	
+
 	Phase = Jour
 		X envoyer un message aux joueurs "C'est le jour blablabla"
 		X faire mourir (tuer) les joueurs ciblés/taggés victime (loup-garous/sorcière)
