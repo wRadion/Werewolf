@@ -3,8 +3,9 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
-
+using System.Windows;
 using Werewolf.Events.ClientRoomServerEvents;
+using Werewolf.Views;
 
 namespace Werewolf.Classes.Room
 {
@@ -31,12 +32,14 @@ namespace Werewolf.Classes.Room
         }
         #endregion Singleton
 
-        private readonly Socket _client;
+        private Socket _client;
         private BinaryWriter _writer;
         private BinaryReader _reader;
+        private bool _isClosing;
 
-        public string Name;
-        public string IPAddressString;
+        public string Name { get; private set; }
+        public bool IsHost { get; private set; }
+        public string IPAddressString { get; private set; }
 
         public event EventHandler<RoomUserListSetEventArgs> RoomUserListSet;
         public event EventHandler<RoomUserMessageSentEventArgs> RoomUserMessageSent;
@@ -45,29 +48,36 @@ namespace Werewolf.Classes.Room
 
         private ClientRoom()
         {
+            Reset();
+        }
+
+        private void Reset()
+        {
             _client = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             _writer = null;
             _reader = null;
 
             Name = string.Empty;
+            IsHost = false;
             IPAddressString = "<Not connected>";
         }
 
-        public void Connect(string name, string ipAddressString)
+        public bool Connect(string name, IPAddress ipAddress)
         {
-            if (_client.Connected) return;
+            if (_client.Connected) return true;
 
-            IPAddress ipAddress = ipAddressString == null ? IPAddress.Loopback : IPAddress.Parse(ipAddressString);
-
-            _client.Connect(new IPEndPoint(ipAddress, ServerRoom.DEFAULT_PORT));
+            _client.Connect(ipAddress, ServerRoom.DEFAULT_PORT);
             NetworkStream stream = new NetworkStream(_client);
             _writer = new BinaryWriter(stream);
             _reader = new BinaryReader(stream);
 
             Name = name;
+            _writer.Write(Name);
+
+            IsHost = _reader.ReadBoolean();
             IPAddressString = ipAddress.ToString();
 
-            _writer.Write(Name);
+            return _reader.ReadBoolean();
         }
 
         public void Send(ServerRoomClientEvent @event, params object[] args)
@@ -122,17 +132,43 @@ namespace Werewolf.Classes.Room
                 catch (EndOfStreamException) { }
                 catch (ObjectDisposedException) { }
                 catch (IOException) { }
+                finally
+                {
+                    if (!_isClosing)
+                    {
+                        MessageBox.Show("Une erreur est survenue : le serveur n'est plus accessible.", "Erreur - Serveur inaccessible", MessageBoxButton.OK, MessageBoxImage.Error);
+                        Disconnect();
+                        Application.Current.Dispatcher.Invoke(() =>
+                        {
+                            ((MainWindow)Application.Current.MainWindow).SetView<MainView>();
+                        });
+                    }
+                }
             });
         }
 
-        public void Disconnect()
+        public void Disconnect(bool isClosing = false)
         {
-            if (!_client.Connected) return;
+            _isClosing = isClosing;
 
-            _reader.Close();
-            _writer.Close();
-            _client.Shutdown(SocketShutdown.Both);
-            _client.Close();
+            if (_reader != null) _reader.Close();
+            if (_writer != null) _writer.Close();
+
+            if (_client.Connected)
+            {
+                try
+                {
+                    _client.Shutdown(SocketShutdown.Both);
+                }
+                catch { }
+                finally
+                {
+                    _client.Close();
+                }
+            }
+
+            if (!isClosing)
+                Reset();
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Controls;
 using Werewolf.Classes.Room;
 
@@ -15,16 +16,16 @@ namespace Werewolf.Views
 
             Closed += ((sender, e) =>
             {
-                ClientRoom.Instance.Disconnect();
+                ClientRoom.Instance.Disconnect(true);
                 ServerRoom.Instance.Stop();
             });
 
-            SetView(new MainView(this));
+            SetView<MainView>();
         }
 
-        public void SetView(UserControl view)
+        public void SetView<TView>() where TView : UserControl
         {
-            Main.Child = view;
+            Main.Child = (TView)(Activator.CreateInstance(typeof(TView), this));
         }
     }
 }

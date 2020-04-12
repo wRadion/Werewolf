@@ -39,6 +39,7 @@
                      Margin="0 0 16px 16px"
                      IsReadOnly="True"
                      VerticalAlignment="Stretch"
+                     ScrollBar.Scroll="ChatBox_Scroll"
                      VerticalScrollBarVisibility="Visible">
             <RichTextBox.Resources>
                 <Style TargetType="{x:Type Paragraph}">

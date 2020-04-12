@@ -25,6 +25,12 @@ namespace Werewolf.Classes.Room
             Id = id;
             Name = _reader.ReadString();
             IsHost = isHost;
+            _writer.Write(IsHost);
+        }
+
+        public void SendBoolean(bool b)
+        {
+            _writer.Write(b);
         }
 
         public void Send(ClientRoomServerEvent @event, params object[] args)
@@ -85,8 +91,8 @@ namespace Werewolf.Classes.Room
         {
             _reader.Close();
             _writer.Close();
-            _client.Shutdown(SocketShutdown.Both);
-            _client.Close();
+
+            _client.Disconnect(false);
         }
     }
 }

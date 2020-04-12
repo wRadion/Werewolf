@@ -79,7 +79,14 @@ namespace Werewolf.Classes.Room
                     while (true)
                     {
                         ServerRoomClient user = new ServerRoomClient(_server.Accept(), CurrentId, CurrentId++ == 0);
-                        OnRoomUserJoined(user);
+
+                        bool isNameTaken = _users.Any((u) => u.Name == user.Name);
+                        user.SendBoolean(!isNameTaken);
+
+                        if (isNameTaken)
+                            user.Disconnect();
+                        else
+                            OnRoomUserJoined(user);
                     }
                 }
                 catch (SocketException) { }
@@ -87,16 +94,15 @@ namespace Werewolf.Classes.Room
             });
         }
 
-        public void Stop()
+        public void Stop(bool isClosing = false)
         {
-            if (!_server.Connected) return;
-
             foreach (ServerRoomClient user in _users)
                 user.Disconnect();
             _users.Clear();
 
-            _server.Shutdown(SocketShutdown.Both);
-            _server.Close();
+            if (!_server.Connected) return;
+
+            _server.Disconnect(!isClosing);
         }
     }
 }

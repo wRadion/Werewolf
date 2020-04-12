@@ -7,10 +7,11 @@ namespace Werewolf.Views
     /// </summary>
     public partial class RoomSettingsWindow : Window
     {
-        public RoomSettingsWindow(MainWindow window)
+        public RoomSettingsWindow(MainWindow window, bool isHost)
         {
             InitializeComponent();
             Owner = window;
+            IsEnabled = isHost;
         }
 
         private void AddRoleBtn_Click(object sender, RoutedEventArgs e)
