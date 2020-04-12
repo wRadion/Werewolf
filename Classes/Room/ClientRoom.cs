@@ -4,16 +4,16 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 
+using Werewolf.Events.ClientRoomServerEvents;
+
 namespace Werewolf.Classes.Room
 {
     public enum ClientRoomServerEvent
     {
-        USER_NAME_SET = 0,
-        ROOM_USER_NAME_CHANGED = 1,
-        ROOM_USER_LIST_CHANGED = 2,
-        ROOM_MESSAGE_SENT = 3,
-        ROOM_USER_JOINED = 4,
-        ROOM_USER_LEFT = 5
+        ROOM_USER_LIST_SET = 0,
+        ROOM_USER_MESSAGE_SENT = 1,
+        ROOM_USER_JOINED = 2,
+        ROOM_USER_LEFT = 3
     }
 
     public class ClientRoom
@@ -38,6 +38,11 @@ namespace Werewolf.Classes.Room
         public string Name;
         public string IPAddressString;
 
+        public event EventHandler<RoomUserListSetEventArgs> RoomUserListSet;
+        public event EventHandler<RoomUserMessageSentEventArgs> RoomUserMessageSent;
+        public event EventHandler<RoomUserJoinedEventArgs> RoomUserJoined;
+        public event EventHandler<RoomUserLeftEventArgs> RoomUserLeft;
+
         private ClientRoom()
         {
             _client = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -48,7 +53,7 @@ namespace Werewolf.Classes.Room
             IPAddressString = "<Not connected>";
         }
 
-        public void Connect(string ipAddressString = null)
+        public void Connect(string name, string ipAddressString)
         {
             if (_client.Connected) return;
 
@@ -59,7 +64,24 @@ namespace Werewolf.Classes.Room
             _writer = new BinaryWriter(stream);
             _reader = new BinaryReader(stream);
 
+            Name = name;
             IPAddressString = ipAddress.ToString();
+
+            _writer.Write(Name);
+        }
+
+        public void Send(ServerRoomClientEvent @event, params object[] args)
+        {
+            _writer.Write((int)@event);
+
+            foreach (object obj in args)
+            {
+                if (obj is int i) _writer.Write(i);
+                else if (obj is bool b) _writer.Write(b);
+                else if (obj is string s) _writer.Write(s);
+                else
+                    throw new NotImplementedException();
+            }
         }
 
         public void Listen()
@@ -71,6 +93,30 @@ namespace Werewolf.Classes.Room
                     while (true)
                     {
                         ClientRoomServerEvent e = (ClientRoomServerEvent)_reader.ReadInt32();
+
+                        switch (e)
+                        {
+                            case ClientRoomServerEvent.ROOM_USER_LIST_SET:
+                                int length = _reader.ReadInt32();
+                                string[] userList = new string[length];
+                                for (int i = 0; i < length; ++i)
+                                    userList[i] = _reader.ReadString();
+                                RoomUserListSet?.Invoke(this, new RoomUserListSetEventArgs(userList));
+                                break;
+                            case ClientRoomServerEvent.ROOM_USER_MESSAGE_SENT:
+                                string name = _reader.ReadString();
+                                string message = _reader.ReadString();
+                                RoomUserMessageSent?.Invoke(this, new RoomUserMessageSentEventArgs(name, message));
+                                break;
+                            case ClientRoomServerEvent.ROOM_USER_JOINED:
+                                string userJoinedName = _reader.ReadString();
+                                RoomUserJoined?.Invoke(this, new RoomUserJoinedEventArgs(userJoinedName));
+                                break;
+                            case ClientRoomServerEvent.ROOM_USER_LEFT:
+                                string userLeftName = _reader.ReadString();
+                                RoomUserLeft?.Invoke(this, new RoomUserLeftEventArgs(userLeftName));
+                                break;
+                        }
                     }
                 }
                 catch (EndOfStreamException) { }

@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-
+using System.Windows.Documents;
 using Werewolf.Classes.Room;
 
 namespace Werewolf.Views
@@ -18,6 +18,57 @@ namespace Werewolf.Views
             _window = window;
 
             IPAddressText.Text = ClientRoom.Instance.IPAddressString;
+
+            ClientRoom.Instance.RoomUserListSet += (sender, e) =>
+            {
+                foreach (string user in e.UserList)
+                    AddUser(user);
+            };
+
+            ClientRoom.Instance.RoomUserMessageSent += (sender, e) =>
+            {
+                AddChatMessage(e.Name, e.Message);
+            };
+
+            ClientRoom.Instance.RoomUserJoined += (sender, e) =>
+            {
+                AddUser(e.Name);
+                AddChatMessage(string.Empty, e.Name + " vient de se connecter sur le salon.");
+            };
+
+            ClientRoom.Instance.RoomUserLeft += (sender, e) =>
+            {
+                RemoveUser(e.Name);
+                AddChatMessage(string.Empty, e.Name + " s'est déconnecté(e) du salon.");
+            };
+
+            ClientRoom.Instance.Listen();
+        }
+
+        private void AddChatMessage(string name, string message)
+        {
+            string nameIfPresent = name.Length == 0 ? name : $"<{name}> ";
+
+            Dispatcher.Invoke(() =>
+            {
+                ChatBox.Document.Blocks.Add(new Paragraph(new Run($"{nameIfPresent}{message}")));
+            });
+        }
+
+        private void AddUser(string name)
+        {
+            Dispatcher.Invoke(() =>
+            {
+                UserList.Items.Add(name);
+            });
+        }
+
+        private void RemoveUser(string name)
+        {
+            Dispatcher.Invoke(() =>
+            {
+                UserList.Items.Remove(name);
+            });
         }
 
         private void SettingsBtn_Click(object sender, RoutedEventArgs e)
@@ -32,7 +83,8 @@ namespace Werewolf.Views
 
         private void SendMessage_Click(object sender, RoutedEventArgs e)
         {
-
+            ClientRoom.Instance.Send(ServerRoomClientEvent.ROOM_USER_SEND_MESSAGE, MessageBox.Text);
+            MessageBox.Text = string.Empty;
         }
     }
 }

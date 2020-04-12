@@ -60,6 +60,12 @@
     <Compile Include="Classes\Game\ServerGameClient.cs" />
     <Compile Include="Classes\Room\ServerRoom.cs" />
     <Compile Include="Classes\Room\ServerRoomClient.cs" />
+    <Compile Include="Events\ClientRoomServerEvents\RoomUserJoinedEventArgs.cs" />
+    <Compile Include="Events\ClientRoomServerEvents\RoomUserLeftEventArgs.cs" />
+    <Compile Include="Events\ClientRoomServerEvents\RoomUserListSetEventArgs.cs" />
+    <Compile Include="Events\ClientRoomServerEvents\RoomUserMessageSentEventArgs.cs" />
+    <Compile Include="Events\ClientRoomServerEvents\RoomUserNameChangedEventArgs.cs" />
+    <Compile Include="Events\ClientRoomServerEvents\UserNameSetEventArgs.cs" />
     <Compile Include="Views\GameView.xaml.cs">
       <DependentUpon>GameView.xaml</DependentUpon>
     </Compile>

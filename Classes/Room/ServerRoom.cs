@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
@@ -9,10 +9,7 @@ namespace Werewolf.Classes.Room
 {
     public enum ServerRoomClientEvent
     {
-        CHANGE_NAME = 0,
-        CHAT_MESSAGE = 1,
-        JOIN_ROOM = 2,
-        LEAVE_ROOM = 3
+        ROOM_USER_SEND_MESSAGE = 0
     }
 
     public class ServerRoom
@@ -42,6 +39,32 @@ namespace Werewolf.Classes.Room
             _users = new List<ServerRoomClient>();
         }
 
+        public void OnRoomUserSendMessage(ServerRoomClient sender, string message)
+        {
+            Send(ClientRoomServerEvent.ROOM_USER_MESSAGE_SENT, sender.Name, message);
+        }
+
+        public void OnRoomUserJoined(ServerRoomClient sender)
+        {
+            Send(ClientRoomServerEvent.ROOM_USER_JOINED, sender.Name);
+            _users.Add(sender);
+            sender.Listen(this);
+            sender.Send(ClientRoomServerEvent.ROOM_USER_MESSAGE_SENT, string.Empty, $"Bienvenue sur le salon, {sender.Name} !");
+            sender.Send(ClientRoomServerEvent.ROOM_USER_LIST_SET, _users.Count, _users.Select((u) => u.Name).ToArray());
+        }
+
+        public void OnRoomUserLeft(ServerRoomClient sender)
+        {
+            _users.Remove(sender);
+            Send(ClientRoomServerEvent.ROOM_USER_LEFT, sender.Name);
+        }
+
+        public void Send(ClientRoomServerEvent @event, params object[] args)
+        {
+            foreach (ServerRoomClient user in _users)
+                user.Send(@event, args);
+        }
+
         public void Start(int port = DEFAULT_PORT)
         {
             if (_server.Connected) return;
@@ -55,23 +78,8 @@ namespace Werewolf.Classes.Room
                 {
                     while (true)
                     {
-                        ServerRoomClient user = new ServerRoomClient(_server.Accept(), $"User{ CurrentId }", CurrentId++ == 0);
-                        _users.Add(user);
-
-                        Task.Run(() =>
-                        {
-                            try
-                            {
-                                while (true)
-                                {
-                                    ServerRoomClientEvent e = (ServerRoomClientEvent)user.Reader.ReadInt32();
-                                    // call listeners
-                                }
-                            }
-                            catch (EndOfStreamException) { }
-                            catch (ObjectDisposedException) { }
-                            catch (IOException) { }
-                        });
+                        ServerRoomClient user = new ServerRoomClient(_server.Accept(), CurrentId, CurrentId++ == 0);
+                        OnRoomUserJoined(user);
                     }
                 }
                 catch (SocketException) { }

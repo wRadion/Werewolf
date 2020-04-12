@@ -14,8 +14,12 @@
 
     <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Margin="16px">
         <Image Source="/Resources/Images/werewolf.png" Width="128px" Height="128px" Margin="0 0 0 8px" />
-        <TextBlock Style="{StaticResource Title}" Text="Loup-garous de Thiercelieux" HorizontalAlignment="Center" />
-        <RadioButton x:Name="RoomConnect" Content="Se connecter à un salon" GroupName="Room" Margin="0 24px 0 8px" />
+        <TextBlock Style="{StaticResource Title}" Text="Loup-garous de Thiercelieux" HorizontalAlignment="Center" Margin="0 0 0 24px" />
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 0 0 16px">
+            <TextBlock Text="Pseudo :" Margin="0 0 16px 0" />
+            <TextBox x:Name="UserName" Width="160px" VerticalAlignment="Center" />
+        </StackPanel>
+        <RadioButton x:Name="RoomConnect" Content="Se connecter à un salon" GroupName="Room" Margin="0 0 0 8px" />
         <Border IsEnabled="{Binding ElementName=RoomConnect, Path=IsChecked}"
                 Opacity="{Binding ElementName=RoomConnect, Path=IsChecked, Converter={StaticResource BoolToOpacity}}"
                 Background="{StaticResource PanelBackground}"

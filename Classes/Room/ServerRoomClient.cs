@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Net.Sockets;
+using System.Threading.Tasks;
 
 namespace Werewolf.Classes.Room
 {
@@ -8,42 +9,82 @@ namespace Werewolf.Classes.Room
     {
         private readonly Socket _client;
 
-        public string Name;
+        public int Id { get; }
+        public string Name { get; set; }
         public bool IsHost;
-        public readonly BinaryWriter Writer;
-        public readonly BinaryReader Reader;
+        private readonly BinaryWriter _writer;
+        private readonly BinaryReader _reader;
 
-        public ServerRoomClient(Socket client, string tempName, bool isHost = false)
+        public ServerRoomClient(Socket client, int id, bool isHost = false)
         {
             _client = client;
             NetworkStream stream = new NetworkStream(_client);
-            Writer = new BinaryWriter(stream);
-            Reader = new BinaryReader(stream);
+            _writer = new BinaryWriter(stream);
+            _reader = new BinaryReader(stream);
 
-            Name = tempName;
+            Id = id;
+            Name = _reader.ReadString();
             IsHost = isHost;
-
-            Writer.Write(tempName);
         }
 
         public void Send(ClientRoomServerEvent @event, params object[] args)
         {
-            Writer.Write((int)@event);
+            _writer.Write((int)@event);
 
             foreach (object obj in args)
             {
-                if (obj is int i) Writer.Write(i);
-                else if (obj is bool b) Writer.Write(b);
-                else if (obj is string s) Writer.Write(s);
+                if (obj is int i) _writer.Write(i);
+                else if (obj is bool b) _writer.Write(b);
+                else if (obj is string s) _writer.Write(s);
+                else if (obj is object[] objs)
+                {
+                    foreach (object obj2 in objs)
+                    {
+                        if (obj2 is int i2) _writer.Write(i2);
+                        else if (obj2 is bool b2) _writer.Write(b2);
+                        else if (obj2 is string s2) _writer.Write(s2);
+                        else
+                            throw new NotImplementedException();
+                    }
+                }
                 else
                     throw new NotImplementedException();
             }
         }
 
+        public void Listen(ServerRoom server)
+        {
+            Task.Run(() =>
+            {
+                try
+                {
+                    while (true)
+                    {
+                        ServerRoomClientEvent e = (ServerRoomClientEvent)_reader.ReadInt32();
+
+                        switch (e)
+                        {
+                            case ServerRoomClientEvent.ROOM_USER_SEND_MESSAGE:
+                                string message = _reader.ReadString();
+                                server.OnRoomUserSendMessage(this, message);
+                                break;
+                        }
+                    }
+                }
+                catch (EndOfStreamException) { }
+                catch (ObjectDisposedException) { }
+                catch (IOException) { }
+                finally
+                {
+                    if (!IsHost)
+                        server.OnRoomUserLeft(this);
+                }
+            });
+        }
         public void Disconnect()
         {
-            Reader.Close();
-            Writer.Close();
+            _reader.Close();
+            _writer.Close();
             _client.Shutdown(SocketShutdown.Both);
             _client.Close();
         }

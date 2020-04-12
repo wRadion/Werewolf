@@ -1,10 +1,10 @@
 [Server]
-CHANGE_NAME (oldname, newname)
+ROOM_CHANGE_USER_NAME (oldname, newname)
 	- Mettre à jour le nom côté serveur
 	- Envoyer à tous les clients
-		USER_NAME_CHANGED (oldname, newname)
+		ROOM_USER_NAME_CHANGED (oldname, newname)
 
-CHAT_MESSAGE (message)
+ROOM_SEND_MESSAGE (message)
 	- Envoyer à tous les clients
 		ROOM_MESSAGE_SENT (name, message)
 
@@ -58,7 +58,7 @@ SET_HUNTER_TARGET (name)
 USER_NAME_SET (name)
 	- Mettre à jour le nom côté client
 
-USER_NAME_CHANGED (oldname, newname)
+ROOM_USER_NAME_CHANGED (oldname, newname)
 	- Mettre à jour le nom côté client
 
 ROOM_USER_LIST_CHANGED (list)

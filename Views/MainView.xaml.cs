@@ -22,7 +22,7 @@ namespace Werewolf.Views
         {
             if (ipAddress == null)
                 ServerRoom.Instance.Start();
-            ClientRoom.Instance.Connect(ipAddress);
+            ClientRoom.Instance.Connect(UserName.Text, ipAddress);
             _window.SetView(new RoomView(_window));
         }
 
