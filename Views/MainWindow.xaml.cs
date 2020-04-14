@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
-using Werewolf.Classes.Room;
+using Werewolf.Models.Room;
 
 namespace Werewolf.Views
 {

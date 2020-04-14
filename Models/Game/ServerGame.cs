@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Werewolf.Classes.Game
+namespace Werewolf.Models.Game
 {
     public class ServerGame
     {

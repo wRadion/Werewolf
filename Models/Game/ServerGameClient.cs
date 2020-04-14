@@ -1,4 +1,4 @@
-﻿namespace Werewolf.Classes.Game
+﻿namespace Werewolf.Models.Game
 {
     class ServerGameClient
     {

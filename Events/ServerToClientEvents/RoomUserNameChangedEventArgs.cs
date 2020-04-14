@@ -2,7 +2,8 @@
 
 namespace Werewolf.Events.ClientRoomServerEvents
 {
-    public class RoomUserNameChangedEventArgs : EventArgs
+    [Serializable]
+    public class RoomUserNameChangedEventArgs : ServerToClientEventArgs
     {
         public string OldName { get; }
         public string NewName { get; }

@@ -2,7 +2,8 @@
 
 namespace Werewolf.Events.ClientRoomServerEvents
 {
-    public class UserNameSetEventArgs : EventArgs
+    [Serializable]
+    public class UserNameSetEventArgs : ServerToClientEventArgs
     {
         public string TemporaryName { get; }
 

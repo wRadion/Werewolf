@@ -3,7 +3,9 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Documents;
 
-using Werewolf.Classes.Room;
+using Werewolf.Events.ClientRoomServerEvents;
+using Werewolf.Events.ClientToServerEvents;
+using Werewolf.Models.Room;
 
 namespace Werewolf.Views
 {
@@ -29,30 +31,30 @@ namespace Werewolf.Views
                 StartGame.Visibility = Visibility.Hidden;
             }
 
-            ClientRoom.Instance.RoomUserListSet += (sender, e) =>
+            ClientRoom.Instance.ServerEvents.AddListener<RoomUserListSetEventArgs>((sender, e) =>
             {
                 foreach (string user in e.UserList)
                     AddUser(user);
-            };
+            });
 
-            ClientRoom.Instance.RoomUserMessageSent += (sender, e) =>
+            ClientRoom.Instance.ServerEvents.AddListener<RoomUserMessageSentEventArgs>((sender, e) =>
             {
                 AddChatMessage(e.Name, e.Message);
-            };
+            });
 
-            ClientRoom.Instance.RoomUserJoined += (sender, e) =>
+            ClientRoom.Instance.ServerEvents.AddListener<RoomUserJoinedEventArgs>((sender, e) =>
             {
                 AddUser(e.Name);
                 AddChatMessage(string.Empty, e.Name + " vient de se connecter sur le salon.");
-            };
+            });
 
-            ClientRoom.Instance.RoomUserLeft += (sender, e) =>
+            ClientRoom.Instance.ServerEvents.AddListener<RoomUserLeftEventArgs>((sender, e) =>
             {
                 RemoveUser(e.Name);
                 AddChatMessage(string.Empty, e.Name + " s'est déconnecté(e) du salon.");
-            };
+            });
 
-            ClientRoom.Instance.Listen();
+            ClientRoom.Instance.ListenServerEvents();
         }
 
         private void AddChatMessage(string name, string message)
@@ -97,7 +99,7 @@ namespace Werewolf.Views
         {
             if (string.IsNullOrWhiteSpace(MessageBox.Text)) return;
 
-            ClientRoom.Instance.Send(ServerRoomClientEvent.ROOM_USER_SEND_MESSAGE, MessageBox.Text);
+            ClientRoom.Instance.SendEvent(new SendChatMessageEventArgs(MessageBox.Text));
             MessageBox.Text = string.Empty;
         }
 
