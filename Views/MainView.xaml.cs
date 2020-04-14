@@ -21,6 +21,14 @@ namespace Werewolf.Views
 
         private void ConnectClient(string ipAddressString = null)
         {
+            UserName.Text = UserName.Text.Trim();
+
+            if (UserName.Text.Length < 3)
+            {
+                MessageBox.Show("Votre pseudo doit contenir au moins 3 lettres.", "Erreur - Pseudo invalide", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
             IPAddress ipAddress = IPAddress.Loopback;
 
             if (ipAddressString != null)

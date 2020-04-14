@@ -17,6 +17,7 @@ namespace Werewolf.Views
 
             Closed += ((sender, e) =>
             {
+                Utils.MessageBox.IsClosing = true;
                 Client.Instance.Disconnect(true);
                 Server.Instance.Stop();
             });
