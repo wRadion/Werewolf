@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
-using Werewolf.Models.Room;
+
+using Werewolf.Network;
 
 namespace Werewolf.Views
 {
@@ -16,8 +17,8 @@ namespace Werewolf.Views
 
             Closed += ((sender, e) =>
             {
-                ClientRoom.Instance.Disconnect(true);
-                ServerRoom.Instance.Stop();
+                Client.Instance.Disconnect(true);
+                Server.Instance.Stop();
             });
 
             SetView<MainView>();

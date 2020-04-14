@@ -1,14 +1,14 @@
 ﻿using System;
 
-namespace Werewolf.Events.ClientRoomServerEvents
+namespace Werewolf.Network.Events
 {
     [Serializable]
-    public class RoomUserMessageSentEventArgs : ServerToClientEventArgs
+    public class ChatMessageSentEventArgs : ServerToClientEventArgs
     {
         public string Name { get; }
         public string Message { get; }
 
-        public RoomUserMessageSentEventArgs(string name, string message)
+        public ChatMessageSentEventArgs(string name, string message)
         {
             Name = name;
             Message = message;

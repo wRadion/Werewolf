@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Werewolf.Events
+namespace Werewolf.Network.Events
 {
     public abstract class Event { }
 

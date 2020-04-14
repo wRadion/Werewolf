@@ -55,29 +55,27 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Events\ClientToServerEvents\ClientToServerEventArgs.cs" />
-    <Compile Include="Events\ClientToServerEvents\SendChatMessageEventArgs.cs" />
-    <Compile Include="Events\ServerToClientEvents\ServerToClientEventArgs.cs" />
-    <Compile Include="Events\EventManager.cs" />
-    <Compile Include="Events\Event.cs" />
-    <Compile Include="Events\ServerEvents\ServerEventArgs.cs" />
-    <Compile Include="Events\ServerEvents\ServerUserConnectedEventArgs.cs" />
-    <Compile Include="Events\ServerEvents\ServerUserDisconnectedEventArgs.cs" />
-    <Compile Include="Models\Room\ClientRoom.cs" />
-    <Compile Include="Models\Game\ServerGame.cs" />
-    <Compile Include="Models\Game\ServerGameClient.cs" />
-    <Compile Include="Models\Room\ServerRoom.cs" />
-    <Compile Include="Models\Room\ServerRoomClient.cs" />
-    <Compile Include="Events\ServerToClientEvents\RoomUserJoinedEventArgs.cs" />
-    <Compile Include="Events\ServerToClientEvents\RoomUserLeftEventArgs.cs" />
-    <Compile Include="Events\ServerToClientEvents\RoomUserListSetEventArgs.cs" />
-    <Compile Include="Events\ServerToClientEvents\RoomUserMessageSentEventArgs.cs" />
-    <Compile Include="Events\ServerToClientEvents\RoomUserNameChangedEventArgs.cs" />
-    <Compile Include="Events\ServerToClientEvents\UserNameSetEventArgs.cs" />
+    <Compile Include="Utils\MessageBox.cs" />
+    <Compile Include="Network\Events\ClientToServerEvents\ClientToServerEventArgs.cs" />
+    <Compile Include="Network\Events\ClientToServerEvents\SendChatMessageEventArgs.cs" />
+    <Compile Include="Network\Events\ServerToClientEvents\ServerToClientEventArgs.cs" />
+    <Compile Include="Network\Events\EventManager.cs" />
+    <Compile Include="Network\Events\Event.cs" />
+    <Compile Include="Network\Events\ServerEvents\ServerEventArgs.cs" />
+    <Compile Include="Network\Events\ServerEvents\ServerUserConnectedEventArgs.cs" />
+    <Compile Include="Network\Events\ServerEvents\ServerUserDisconnectedEventArgs.cs" />
+    <Compile Include="Network\Client.cs" />
+    <Compile Include="Network\Server.cs" />
+    <Compile Include="Network\User.cs" />
+    <Compile Include="Network\Events\ServerToClientEvents\UserJoinedEventArgs.cs" />
+    <Compile Include="Network\Events\ServerToClientEvents\UserLeftEventArgs.cs" />
+    <Compile Include="Network\Events\ServerToClientEvents\UserListSetEventArgs.cs" />
+    <Compile Include="Network\Events\ServerToClientEvents\ChatMessageSentEventArgs.cs" />
+    <Compile Include="Network\Events\ServerToClientEvents\UserNameSetEventArgs.cs" />
     <Compile Include="Network\Exceptions\NameAlreadyTakenException.cs" />
     <Compile Include="Network\Exceptions\UnexpectedPacketException.cs" />
-    <Compile Include="Network\Packet.cs" />
-    <Compile Include="Network\PacketManager.cs" />
+    <Compile Include="Network\Packets\Packet.cs" />
+    <Compile Include="Network\Packets\PacketManager.cs" />
     <Compile Include="Views\GameView.xaml.cs">
       <DependentUpon>GameView.xaml</DependentUpon>
     </Compile>

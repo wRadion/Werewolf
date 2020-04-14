@@ -7,25 +7,21 @@ using System.Net.Sockets;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
-using Werewolf.Events;
-using Werewolf.Events.ClientRoomServerEvents;
-using Werewolf.Events.ClientToServerEvents;
-using Werewolf.Events.ServerEvents;
-using Werewolf.Network;
+using Werewolf.Network.Events;
 using Werewolf.Network.Exceptions;
 
-namespace Werewolf.Models.Room
+namespace Werewolf.Network
 {
-    public class ServerRoom
+    public class Server
     {
         #region Singleton
-        private static ServerRoom _instance = null;
-        public static ServerRoom Instance
+        private static Server _instance = null;
+        public static Server Instance
         {
             get
             {
                 if (_instance == null)
-                    _instance = new ServerRoom();
+                    _instance = new Server();
                 return _instance;
             }
         }
@@ -34,36 +30,36 @@ namespace Werewolf.Models.Room
         public const int DEFAULT_PORT = 9998;
 
         private readonly Socket _server;
-        private readonly List<ServerRoomClient> _users;
+        private readonly List<User> _users;
         private readonly EventManager<ClientToServerEventArgs> _userEvents;
 
         public EventManager<ServerEventArgs> ServerEvents { get; }
 
-        private ServerRoom()
+        private Server()
         {
             _server = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            _users = new List<ServerRoomClient>();
+            _users = new List<User>();
             _userEvents = new EventManager<ClientToServerEventArgs>();
             ServerEvents = new EventManager<ServerEventArgs>();
 
             _userEvents.AddListener<SendChatMessageEventArgs>((sender, e) =>
             {
-                SendEvent(new RoomUserMessageSentEventArgs(((ServerRoomClient)sender).Name, e.Message));
+                SendEvent(new ChatMessageSentEventArgs(((User)sender).Name, e.Message));
             });
 
             ServerEvents.AddListener<ServerUserConnectedEventArgs>((sender, e) =>
             {
-                SendEvent(new RoomUserJoinedEventArgs(e.User.Name));
+                SendEvent(new UserJoinedEventArgs(e.User.Name));
                 _users.Add(e.User);
                 ListenUserEvents(e.User);
-                e.User.SendEvent(new RoomUserMessageSentEventArgs(string.Empty, $"Bienvenue sur le salon, {e.User.Name} !"));
-                e.User.SendEvent(new RoomUserListSetEventArgs(_users.Select((u) => u.Name).ToArray()));
+                e.User.SendEvent(new ChatMessageSentEventArgs(string.Empty, $"Bienvenue sur le salon, {e.User.Name} !"));
+                e.User.SendEvent(new UserListSetEventArgs(_users.Select((u) => u.Name).ToArray()));
             });
 
             ServerEvents.AddListener<ServerUserDisconnectedEventArgs>((sender, e) =>
             {
                 _users.Remove(e.User);
-                SendEvent(new RoomUserLeftEventArgs(e.User.Name));
+                SendEvent(new UserLeftEventArgs(e.User.Name));
             });
         }
 
@@ -84,11 +80,11 @@ namespace Werewolf.Models.Room
                 {
                     while (true)
                     {
-                        ServerRoomClient user = null;
+                        User user = null;
 
                         try
                         {
-                            user = new ServerRoomClient(_server.Accept(), _users.ToArray());
+                            user = new User(_server.Accept(), _users.ToArray());
                             ServerEvents.RaiseEvent(this, new ServerUserConnectedEventArgs((user)));
                         }
                         catch (NameAlreadyTakenException)
@@ -97,12 +93,12 @@ namespace Werewolf.Models.Room
                         }
                     }
                 }
-                catch (SocketException) { }
-                catch (ObjectDisposedException) { }
+                catch (SocketException e) { Utils.MessageBox.ShowException(e); }
+                catch (ObjectDisposedException e) { Utils.MessageBox.ShowException(e); }
             });
         }
 
-        private void ListenUserEvents(ServerRoomClient user)
+        private void ListenUserEvents(User user)
         {
             Task.Run(() =>
             {
@@ -113,10 +109,10 @@ namespace Werewolf.Models.Room
                         _userEvents.RaiseEvent(user, user.ExpectEvent());
                     }
                 }
-                catch (SerializationException) { }
-                catch (EndOfStreamException) { }
-                catch (ObjectDisposedException) { }
-                catch (IOException) { }
+                catch (SerializationException e) { Utils.MessageBox.ShowException(e); }
+                catch (EndOfStreamException e) { Utils.MessageBox.ShowException(e); }
+                catch (ObjectDisposedException e) { Utils.MessageBox.ShowException(e); }
+                catch (IOException e) { Utils.MessageBox.ShowException(e); }
                 finally
                 {
                     if (!user.IsHost)
@@ -128,13 +124,13 @@ namespace Werewolf.Models.Room
 
         public void SendEvent<TEventArgs>(TEventArgs args) where TEventArgs : ServerToClientEventArgs
         {
-            foreach (ServerRoomClient user in _users)
+            foreach (User user in _users)
                 user.SendEvent(args);
         }
 
         public void Stop(bool isClosing = false)
         {
-            foreach (ServerRoomClient user in _users)
+            foreach (User user in _users)
                 user.Disconnect();
             _users.Clear();
 

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Werewolf.Events
+namespace Werewolf.Network.Events
 {
     public class EventManager : EventManager<EventArgs> { }
 

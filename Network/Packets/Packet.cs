@@ -2,7 +2,7 @@
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 
-namespace Werewolf.Network
+namespace Werewolf.Network.Packets
 {
     [Serializable]
     public abstract class Packet

@@ -6,13 +6,11 @@ using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using System.Windows;
 
-using Werewolf.Events;
-using Werewolf.Events.ClientRoomServerEvents;
-using Werewolf.Events.ClientToServerEvents;
-using Werewolf.Network;
+using Werewolf.Network.Events;
+using Werewolf.Network.Packets;
 using Werewolf.Views;
 
-namespace Werewolf.Models.Room
+namespace Werewolf.Network
 {
     public enum ClientRoomServerEvent
     {
@@ -22,16 +20,16 @@ namespace Werewolf.Models.Room
         ROOM_USER_LEFT = 3
     }
 
-    public class ClientRoom
+    public class Client
     {
         #region Singleton
-        private static ClientRoom _instance = null;
-        public static ClientRoom Instance
+        private static Client _instance = null;
+        public static Client Instance
         {
             get
             {
                 if (_instance == null)
-                    _instance = new ClientRoom();
+                    _instance = new Client();
                 return _instance;
             }
         }
@@ -46,7 +44,7 @@ namespace Werewolf.Models.Room
         public string IPAddressString { get; private set; }
         public EventManager<ServerToClientEventArgs> ServerEvents { get; private set; }
 
-        private ClientRoom()
+        private Client()
         {
             Reset();
         }
@@ -66,7 +64,7 @@ namespace Werewolf.Models.Room
         {
             if (_client.Connected) return true;
 
-            _client.Connect(ipAddress, ServerRoom.DEFAULT_PORT);
+            _client.Connect(ipAddress, Server.DEFAULT_PORT);
             _packets = new PacketManager(new NetworkStream(_client));
 
             _packets.Send(new Packet<string>(name));
@@ -91,10 +89,10 @@ namespace Werewolf.Models.Room
                         ServerEvents.RaiseEvent(ExpectEvent());
                     }
                 }
-                catch (SerializationException) { }
-                catch (EndOfStreamException) { }
-                catch (ObjectDisposedException) { }
-                catch (IOException) { }
+                catch (SerializationException e) { Utils.MessageBox.ShowException(e); }
+                catch (EndOfStreamException e) { Utils.MessageBox.ShowException(e); }
+                catch (ObjectDisposedException e) { Utils.MessageBox.ShowException(e); }
+                catch (IOException e) { Utils.MessageBox.ShowException(e); }
                 finally
                 {
                     if (!_isClosing)

@@ -3,9 +3,8 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Documents;
 
-using Werewolf.Events.ClientRoomServerEvents;
-using Werewolf.Events.ClientToServerEvents;
-using Werewolf.Models.Room;
+using Werewolf.Network;
+using Werewolf.Network.Events;
 
 namespace Werewolf.Views
 {
@@ -24,37 +23,37 @@ namespace Werewolf.Views
             _hasScroll = false;
 
             ChatBox.Document.Blocks.Clear();
-            IPAddressText.Text = ClientRoom.Instance.IPAddressString;
+            IPAddressText.Text = Client.Instance.IPAddressString;
 
-            if (!ClientRoom.Instance.IsHost)
+            if (!Client.Instance.IsHost)
             {
                 StartGame.Visibility = Visibility.Hidden;
             }
 
-            ClientRoom.Instance.ServerEvents.AddListener<RoomUserListSetEventArgs>((sender, e) =>
+            Client.Instance.ServerEvents.AddListener<UserListSetEventArgs>((sender, e) =>
             {
                 foreach (string user in e.UserList)
                     AddUser(user);
             });
 
-            ClientRoom.Instance.ServerEvents.AddListener<RoomUserMessageSentEventArgs>((sender, e) =>
+            Client.Instance.ServerEvents.AddListener<ChatMessageSentEventArgs>((sender, e) =>
             {
                 AddChatMessage(e.Name, e.Message);
             });
 
-            ClientRoom.Instance.ServerEvents.AddListener<RoomUserJoinedEventArgs>((sender, e) =>
+            Client.Instance.ServerEvents.AddListener<UserJoinedEventArgs>((sender, e) =>
             {
                 AddUser(e.Name);
                 AddChatMessage(string.Empty, e.Name + " vient de se connecter sur le salon.");
             });
 
-            ClientRoom.Instance.ServerEvents.AddListener<RoomUserLeftEventArgs>((sender, e) =>
+            Client.Instance.ServerEvents.AddListener<UserLeftEventArgs>((sender, e) =>
             {
                 RemoveUser(e.Name);
                 AddChatMessage(string.Empty, e.Name + " s'est déconnecté(e) du salon.");
             });
 
-            ClientRoom.Instance.ListenServerEvents();
+            Client.Instance.ListenServerEvents();
         }
 
         private void AddChatMessage(string name, string message)
@@ -87,7 +86,7 @@ namespace Werewolf.Views
 
         private void SettingsBtn_Click(object sender, RoutedEventArgs e)
         {
-            new RoomSettingsWindow(_window, ClientRoom.Instance.IsHost).ShowDialog();
+            new RoomSettingsWindow(_window, Client.Instance.IsHost).ShowDialog();
         }
 
         private void StartGame_Click(object sender, RoutedEventArgs e)
@@ -99,7 +98,7 @@ namespace Werewolf.Views
         {
             if (string.IsNullOrWhiteSpace(MessageBox.Text)) return;
 
-            ClientRoom.Instance.SendEvent(new SendChatMessageEventArgs(MessageBox.Text));
+            Client.Instance.SendEvent(new SendChatMessageEventArgs(MessageBox.Text));
             MessageBox.Text = string.Empty;
         }
 

@@ -1,0 +1,28 @@
+﻿using System;
+using System.Windows;
+
+namespace Werewolf.Utils
+{
+    public static class MessageBox
+    {
+        public static void ShowException(Exception e)
+        {
+            ShowError(e.Message, "Error - " + e.GetType().Name);
+        }
+
+        public static void ShowError(string message, string caption)
+        {
+            System.Windows.MessageBox.Show(message, caption, MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+
+        public static void ShowInfo(string message, string caption)
+        {
+            System.Windows.MessageBox.Show(message, caption, MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+        public static void ShowWarning(string message, string caption)
+        {
+            System.Windows.MessageBox.Show(message, caption, MessageBoxButton.OK, MessageBoxImage.Warning);
+        }
+    }
+}

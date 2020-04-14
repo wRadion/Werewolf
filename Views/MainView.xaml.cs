@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 
-using Werewolf.Models.Room;
+using Werewolf.Network;
 
 namespace Werewolf.Views
 {
@@ -34,14 +34,14 @@ namespace Werewolf.Views
                 }
             }
             else
-                ServerRoom.Instance.Start();
+                Server.Instance.Start();
 
-            if (ClientRoom.Instance.Connect(UserName.Text, ipAddress))
+            if (Client.Instance.Connect(UserName.Text, ipAddress))
                 _window.SetView<RoomView>();
             else
             {
                 MessageBox.Show("Erreur lors de la connexion : le pseudo que vous avez choisi est déjà pris.", "Pseudo déjà pris", MessageBoxButton.OK, MessageBoxImage.Error);
-                ClientRoom.Instance.Disconnect();
+                Client.Instance.Disconnect();
             }
         }
 

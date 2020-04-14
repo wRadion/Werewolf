@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace Werewolf.Network
+namespace Werewolf.Network.Packets
 {
     public class PacketManager
     {

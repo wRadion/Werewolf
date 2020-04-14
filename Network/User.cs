@@ -2,12 +2,12 @@
 using System.Linq;
 using System.Net.Sockets;
 
-using Werewolf.Network;
 using Werewolf.Network.Exceptions;
+using Werewolf.Network.Packets;
 
-namespace Werewolf.Models.Room
+namespace Werewolf.Network
 {
-    public class ServerRoomClient
+    public class User
     {
         private readonly Socket _client;
         private readonly PacketManager _packets;
@@ -15,7 +15,7 @@ namespace Werewolf.Models.Room
         public string Name { get; set; }
         public bool IsHost;
 
-        public ServerRoomClient(Socket client, ServerRoomClient[] users)
+        public User(Socket client, User[] users)
         {
             _client = client;
             _packets = new PacketManager(new NetworkStream(_client));

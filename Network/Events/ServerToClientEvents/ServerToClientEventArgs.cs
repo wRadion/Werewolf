@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Werewolf.Events.ClientRoomServerEvents
+namespace Werewolf.Network.Events
 {
     [Serializable]
     public abstract class ServerToClientEventArgs : EventArgs { }
