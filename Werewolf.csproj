@@ -14,6 +14,8 @@
     <WarningLevel>4</WarningLevel>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -55,6 +57,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Game\Game.cs" />
+    <Compile Include="Game\Player.cs" />
+    <Compile Include="Game\Role.cs" />
+    <Compile Include="Game\Team.cs" />
+    <Compile Include="Game\Tag.cs" />
     <Compile Include="Utils\MessageBox.cs" />
     <Compile Include="Network\Events\ClientToServerEvents\ClientToServerEventArgs.cs" />
     <Compile Include="Network\Events\ClientToServerEvents\SendChatMessageEventArgs.cs" />
@@ -85,8 +92,8 @@
     <Compile Include="Views\RoomView.xaml.cs">
       <DependentUpon>RoomView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\RoomSettingsWindow.xaml.cs">
-      <DependentUpon>RoomSettingsWindow.xaml</DependentUpon>
+    <Compile Include="Views\GameSettingsWindow.xaml.cs">
+      <DependentUpon>GameSettingsWindow.xaml</DependentUpon>
     </Compile>
     <Page Include="Views\GameView.xaml">
       <SubType>Designer</SubType>
@@ -113,7 +120,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\RoomSettingsWindow.xaml">
+    <Page Include="Views\GameSettingsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -177,8 +184,6 @@
   <ItemGroup>
     <Resource Include="Resources\Images\Icons\arrow_left.png" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Game\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

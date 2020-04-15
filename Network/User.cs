@@ -7,29 +7,27 @@ using Werewolf.Network.Packets;
 
 namespace Werewolf.Network
 {
-    public class User
+    public class User : IEquatable<User>
     {
         private readonly Socket _client;
         private readonly PacketManager _packets;
 
         public string Name { get; set; }
-        public bool IsHost;
+        public bool IsHost { get; }
 
         public User(Socket client, User[] users)
         {
             _client = client;
             _packets = new PacketManager(new NetworkStream(_client));
 
-            IsHost = users.Length == 0;
-
             Packet<string> packetName = _packets.Expect<Packet<string>>();
 
-            bool isNameTaken = users.Any((user) => user.Name == packetName.Data1);
+            bool isNameTaken = users.Any((user) => Equals(user));
 
-            _packets.Send(new Packet<bool>(IsHost));
             _packets.Send(new Packet<bool>(isNameTaken));
 
             Name = packetName.Data1;
+            IsHost = users.Length == 0;
 
             if (isNameTaken)
                 throw new NameAlreadyTakenException(Name);
@@ -50,5 +48,7 @@ namespace Werewolf.Network
             _packets.Close();
             _client.Disconnect(false);
         }
+
+        public bool Equals(User other) => Name.Equals(other.Name);
     }
 }

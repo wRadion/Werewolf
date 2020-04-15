@@ -40,7 +40,7 @@ namespace Werewolf.Network
         private bool _isClosing;
 
         public string Name { get; private set; }
-        public bool IsHost { get; private set; }
+        public bool IsHost => Server.Instance.Started;
         public string IPAddressString { get; private set; }
         public EventManager<ServerToClientEventArgs> ServerEvents { get; private set; }
 
@@ -55,7 +55,6 @@ namespace Werewolf.Network
             _packets = null;
 
             Name = string.Empty;
-            IsHost = false;
             IPAddressString = "<Not connected>";
             ServerEvents = new EventManager<ServerToClientEventArgs>();
         }
@@ -68,11 +67,9 @@ namespace Werewolf.Network
             _packets = new PacketManager(new NetworkStream(_client));
 
             _packets.Send(new Packet<string>(name));
-            Packet<bool> packetIsHost = _packets.Expect<Packet<bool>>();
             Packet<bool> packetIsNameTaken = _packets.Expect<Packet<bool>>();
 
             Name = name;
-            IsHost = packetIsHost.Data1;
             IPAddressString = ipAddress.ToString();
 
             return !packetIsNameTaken.Data1;
@@ -89,10 +86,14 @@ namespace Werewolf.Network
                         ServerEvents.RaiseEvent(ExpectEvent());
                     }
                 }
-                catch (SerializationException e) { Utils.MessageBox.ShowException(e); }
-                catch (EndOfStreamException e) { Utils.MessageBox.ShowException(e); }
-                catch (ObjectDisposedException e) { Utils.MessageBox.ShowException(e); }
-                catch (IOException e) { Utils.MessageBox.ShowException(e); }
+                catch (Exception e) when (
+                    e is SerializationException ||
+                    e is EndOfStreamException ||
+                    e is ObjectDisposedException ||
+                    e is IOException)
+                {
+                    Utils.MessageBox.ShowException(e);
+                }
                 finally
                 {
                     if (!_isClosing)
@@ -121,7 +122,8 @@ namespace Werewolf.Network
         public void Disconnect(bool isClosing = false)
         {
             _isClosing = isClosing;
-            _packets.Close();
+            if (_packets != null)
+                _packets.Close();
 
             if (_client.Connected)
             {

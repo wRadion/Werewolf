@@ -33,6 +33,7 @@ namespace Werewolf.Network
         private readonly List<User> _users;
         private readonly EventManager<ClientToServerEventArgs> _userEvents;
 
+        public bool Started { get; private set; }
         public EventManager<ServerEventArgs> ServerEvents { get; }
 
         private Server()
@@ -54,18 +55,21 @@ namespace Werewolf.Network
                 ListenUserEvents(e.User);
                 e.User.SendEvent(new ChatMessageSentEventArgs(string.Empty, $"Bienvenue sur le salon, {e.User.Name} !"));
                 e.User.SendEvent(new UserListSetEventArgs(_users.Select((u) => u.Name).ToArray()));
+                Game.Game.Instance.AddPlayer(e.User);
             });
 
             ServerEvents.AddListener<ServerUserDisconnectedEventArgs>((sender, e) =>
             {
                 _users.Remove(e.User);
                 SendEvent(new UserLeftEventArgs(e.User.Name));
+                Game.Game.Instance.RemovePlayer(e.User);
             });
         }
 
         public void Start(int port = DEFAULT_PORT)
         {
             if (_server.Connected) return;
+            Started = true;
 
             _server.Bind(new IPEndPoint(IPAddress.Loopback, port));
             _server.Listen(10);
@@ -93,8 +97,12 @@ namespace Werewolf.Network
                         }
                     }
                 }
-                catch (SocketException e) { Utils.MessageBox.ShowException(e); }
-                catch (ObjectDisposedException e) { Utils.MessageBox.ShowException(e); }
+                catch (Exception e) when (
+                    e is SocketException ||
+                    e is ObjectDisposedException)
+                {
+                    Utils.MessageBox.ShowException(e);
+                }
             });
         }
 
@@ -109,10 +117,14 @@ namespace Werewolf.Network
                         _userEvents.RaiseEvent(user, user.ExpectEvent());
                     }
                 }
-                catch (SerializationException e) { Utils.MessageBox.ShowException(e); }
-                catch (EndOfStreamException e) { Utils.MessageBox.ShowException(e); }
-                catch (ObjectDisposedException e) { Utils.MessageBox.ShowException(e); }
-                catch (IOException e) { Utils.MessageBox.ShowException(e); }
+                catch (Exception e) when (
+                    e is SerializationException ||
+                    e is EndOfStreamException ||
+                    e is ObjectDisposedException ||
+                    e is IOException)
+                {
+                    Utils.MessageBox.ShowException(e);
+                }
                 finally
                 {
                     if (!user.IsHost)

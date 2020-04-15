@@ -27,6 +27,7 @@ namespace Werewolf.Views
 
             if (!Client.Instance.IsHost)
             {
+                SettingsBtn.Visibility = Visibility.Hidden;
                 StartGame.Visibility = Visibility.Hidden;
             }
 
@@ -86,7 +87,7 @@ namespace Werewolf.Views
 
         private void SettingsBtn_Click(object sender, RoutedEventArgs e)
         {
-            new RoomSettingsWindow(_window, Client.Instance.IsHost).ShowDialog();
+            new GameSettingsWindow(_window).ShowDialog();
         }
 
         private void StartGame_Click(object sender, RoutedEventArgs e)
