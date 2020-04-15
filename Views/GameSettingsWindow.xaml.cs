@@ -5,7 +5,6 @@ using System.Windows.Controls;
 using System.Windows.Media;
 
 using Werewolf.Game;
-using Werewolf.Network;
 
 namespace Werewolf.Views
 {
@@ -14,10 +13,13 @@ namespace Werewolf.Views
     /// </summary>
     public partial class GameSettingsWindow : Window
     {
+        private RoomView _roomView;
+
         public GameSettingsWindow(MainWindow window)
         {
             InitializeComponent();
             Owner = window;
+            _roomView = null;
 
             Closing += (sender, e) =>
             {
@@ -26,20 +28,14 @@ namespace Werewolf.Views
                     e.Cancel = true;
                     MessageBox.Show("Il doit y avoir plus de villageois que de loup-garous et au moins un loup-garou.", "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
+                else
+                {
+                    if (_roomView != null)
+                        _roomView.EnableStartGameButton();
+                }
             };
 
-            List<Role> allRoles = new List<Role>()
-            {
-                Role.Cupid,
-                Role.Hunter,
-                Role.LittleGirl,
-                Role.Seer,
-                Role.Villager,
-                Role.Werewolf,
-                Role.Witch
-            };
-
-            foreach (Role role in allRoles)
+            foreach (Role role in Role.GetAllRoles())
             {
                 if (!Game.Game.Instance.ContainsRole(role) || !role.IsUnique)
                     AddRoleAndSort(AvailableRoleList, role);
@@ -53,10 +49,12 @@ namespace Werewolf.Views
         {
             ItemCollection collection = listBox.Items;
 
-            ListBoxItem item = new ListBoxItem();
-            item.DataContext = addedRole;
-            item.Foreground = new SolidColorBrush(addedRole.DefaultTeam.Color);
-            item.Content = addedRole.Name;
+            ListBoxItem item = new ListBoxItem
+            {
+                DataContext = addedRole,
+                Foreground = new SolidColorBrush(addedRole.DefaultTeam.Color),
+                Content = addedRole.Name
+            };
 
             collection.Add(item);
             List<ListBoxItem> list = collection.Cast<ListBoxItem>().ToList();
@@ -96,6 +94,11 @@ namespace Werewolf.Views
         private void OkBtn_Click(object sender, RoutedEventArgs e)
         {
             Close();
+        }
+
+        public void SetRoomView(RoomView roomView)
+        {
+            _roomView = roomView;
         }
     }
 }

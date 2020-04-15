@@ -21,6 +21,7 @@
         <RichTextBox x:Name="ChatBox" Grid.Column="1" Grid.Row="0"
                      Margin="0 0 16px 16px"
                      IsReadOnly="True"
+                     ScrollBar.Scroll="ChatBox_Scroll"
                      VerticalAlignment="Stretch"
                      VerticalScrollBarVisibility="Visible">
             <RichTextBox.Resources>

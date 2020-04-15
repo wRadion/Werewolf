@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using System.Linq;
+using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Documents;
@@ -54,6 +56,16 @@ namespace Werewolf.Views
                 AddChatMessage(string.Empty, e.Name + " s'est déconnecté(e) du salon.");
             });
 
+            Client.Instance.ServerEvents.AddListener<GameStartedEventArgs>((sender, e) =>
+            {
+                Dispatcher.Invoke(() =>
+                {
+                    GameView view = _window.SetView<GameView>();
+                    view.SetRoles(e.RoleIds);
+                    view.SetUsers(UserList.Items.Cast<string>().ToArray());
+                });
+            });
+
             Client.Instance.ListenServerEvents();
         }
 
@@ -87,25 +99,37 @@ namespace Werewolf.Views
 
         private void SettingsBtn_Click(object sender, RoutedEventArgs e)
         {
-            new GameSettingsWindow(_window).ShowDialog();
+            if (!Client.Instance.IsHost) return;
+
+            GameSettingsWindow gameSettingsWindow = new GameSettingsWindow(_window);
+            gameSettingsWindow.SetRoomView(this);
+            gameSettingsWindow.ShowDialog();
         }
 
-        private void StartGame_Click(object sender, RoutedEventArgs e)
+        private async void StartGame_Click(object sender, RoutedEventArgs e)
         {
+            if (!Client.Instance.IsHost) return;
 
+            for (int i = 5; i >= 1; --i)
+            {
+                Server.Instance.SendEvent(new ChatMessageSentEventArgs(string.Empty, $"Démarrage de la partie dans {i}..."));
+                await Task.Delay(1000);
+            }
+
+            Server.Instance.SendEvent(new GameStartedEventArgs(Game.Game.Instance.GetRoles().Select((role) => role.Id).ToArray()));
         }
 
         private void SendMessage_Click(object sender, RoutedEventArgs e)
         {
+            MessageBox.Text = MessageBox.Text.Trim();
             if (string.IsNullOrWhiteSpace(MessageBox.Text)) return;
 
             Client.Instance.SendEvent(new SendChatMessageEventArgs(MessageBox.Text));
             MessageBox.Text = string.Empty;
         }
 
-        private void ChatBox_Scroll(object sender, ScrollEventArgs e)
-        {
-            _hasScroll = true;
-        }
+        private void ChatBox_Scroll(object sender, ScrollEventArgs e) => _hasScroll = true;
+
+        public void EnableStartGameButton() => StartGame.IsEnabled = true;
     }
 }

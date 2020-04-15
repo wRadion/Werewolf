@@ -22,12 +22,11 @@ namespace Werewolf.Network
 
             Packet<string> packetName = _packets.Expect<Packet<string>>();
 
+            Name = packetName.Data1;
+            IsHost = users.Length == 0;
             bool isNameTaken = users.Any((user) => Equals(user));
 
             _packets.Send(new Packet<bool>(isNameTaken));
-
-            Name = packetName.Data1;
-            IsHost = users.Length == 0;
 
             if (isNameTaken)
                 throw new NameAlreadyTakenException(Name);

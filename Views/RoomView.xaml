@@ -28,7 +28,7 @@
                 <TextBlock Text="Paramètres" Margin="6px 0 0 0" />
             </StackPanel>
         </Button>
-        <Button x:Name="StartGame" Grid.Column="2" Grid.Row="0" Click="StartGame_Click">
+        <Button x:Name="StartGame" Grid.Column="2" Grid.Row="0" Click="StartGame_Click" IsEnabled="False">
             <StackPanel Orientation="Horizontal">
                 <Image Source="/Resources/Images/Icons/play.png" Width="16px" Height="16px" Margin="0 2px 0 0" />
                 <TextBlock Text="Lancer la partie" Margin="2px 0 0 0" />

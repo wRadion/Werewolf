@@ -25,9 +25,11 @@ namespace Werewolf.Views
             SetView<MainView>();
         }
 
-        public void SetView<TView>() where TView : UserControl
+        public TView SetView<TView>() where TView : UserControl
         {
-            Main.Child = (TView)(Activator.CreateInstance(typeof(TView), this));
+            TView view = (TView)(Activator.CreateInstance(typeof(TView), this));
+            Main.Child = view;
+            return view;
         }
     }
 }

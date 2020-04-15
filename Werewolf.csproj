@@ -62,6 +62,7 @@
     <Compile Include="Game\Role.cs" />
     <Compile Include="Game\Team.cs" />
     <Compile Include="Game\Tag.cs" />
+    <Compile Include="Network\Events\ServerToClientEvents\GameStartedEventArgs.cs" />
     <Compile Include="Utils\MessageBox.cs" />
     <Compile Include="Network\Events\ClientToServerEvents\ClientToServerEventArgs.cs" />
     <Compile Include="Network\Events\ClientToServerEvents\SendChatMessageEventArgs.cs" />
