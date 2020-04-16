@@ -9,6 +9,7 @@ namespace Werewolf.Game
         LOVER = 1,
         MAYOR = 2,
         WEREWOLF_TARGET = 4,
-        WITCH_TARGET = 8
+        WITCH_TARGET = 8,
+        DEAD = 16,
     }
 }

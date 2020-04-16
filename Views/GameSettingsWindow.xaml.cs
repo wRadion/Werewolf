@@ -5,6 +5,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 
 using Werewolf.Game;
+using Werewolf.Game.Exceptions;
 
 namespace Werewolf.Views
 {
@@ -23,15 +24,32 @@ namespace Werewolf.Views
 
             Closing += (sender, e) =>
             {
-                if (!Game.Game.Instance.ValidateRoles())
+                try
                 {
-                    e.Cancel = true;
-                    MessageBox.Show("Il doit y avoir plus de villageois que de loup-garous et au moins un loup-garou.", "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
-                else
-                {
+                    Game.Game.Instance.ValidateRoles();
+
                     if (_roomView != null)
                         _roomView.EnableStartGameButton();
+                }
+                catch (NotEnoughWerewolfException)
+                {
+                    e.Cancel = true;
+                    MessageBox.Show("Il doit y avoir au moins un loup-garou.", "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+                catch (TooMuchWerewolfException)
+                {
+                    e.Cancel = true;
+                    MessageBox.Show("Il doit y avoir plus de villageois que de loup-garous.", "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+                catch (NotEnoughRolesException)
+                {
+                    e.Cancel = true;
+                    MessageBox.Show("Il n'y a pas assez de rôles pour tous les joueurs.", "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+                catch (TooMuchRolesException)
+                {
+                    e.Cancel = true;
+                    MessageBox.Show("Il y a trop de rôles.", "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             };
 

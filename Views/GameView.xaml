@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:Werewolf.Views"
-             mc:Ignorable="d">
+             mc:Ignorable="d" d:DesignWidth="720"  d:DesignHeight="540">
     <Grid Margin="16px 0 16px 16px">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto" MinWidth="128px" />
@@ -13,12 +13,27 @@
         </Grid.ColumnDefinitions>
 
         <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
 
-        <ListBox x:Name="RoleList" Grid.Column="0" Grid.Row="0" Margin="0 0 16px 16px" />
-        <RichTextBox x:Name="ChatBox" Grid.Column="1" Grid.Row="0"
+        <ListBox x:Name="RoleList" Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" Margin="0 0 16px 16px" />
+
+        <Grid Grid.Column="1" Grid.Row="0" Margin="0 0 16px 16px">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="0" Text="Votre rôle est " />
+            <TextBlock x:Name="RoleText" Grid.Column="1" FontWeight="Bold" />
+
+            <TextBlock x:Name="TimerText" Grid.Column="2" FontSize="24px" FontWeight="Bold" HorizontalAlignment="Right" />
+        </Grid>
+
+        <RichTextBox x:Name="ChatBox" Grid.Column="1" Grid.Row="1"
                      Margin="0 0 16px 16px"
                      IsReadOnly="True"
                      ScrollBar.Scroll="ChatBox_Scroll"
@@ -31,10 +46,11 @@
                 </Style>
             </RichTextBox.Resources>
         </RichTextBox>
-        <ListBox x:Name="UserList" Grid.Column="2" Grid.Row="0" Margin="0 0 0 16px" />
 
-        <TextBox x:Name="MessageBox" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Margin="0 0 16px 0" />
-        <Button x:Name="SendMessage" Grid.Column="2" Grid.Row="1" Click="SendMessage_Click" IsDefault="True">
+        <ListBox x:Name="UserList" Grid.Column="2" Grid.Row="0" Grid.RowSpan="2" Margin="0 0 0 16px" />
+
+        <TextBox x:Name="Message" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" Margin="0 0 16px 0" />
+        <Button x:Name="SendMessage" Grid.Column="2" Grid.Row="2" Click="SendMessage_Click" IsDefault="True">
             <StackPanel Orientation="Horizontal">
                 <Image Source="/Resources/Images/Icons/email_go.png" Width="16px" Height="16px" Margin="0 2px 0 0" />
                 <TextBlock Text="Envoyer" Margin="8px 0 0 0" />

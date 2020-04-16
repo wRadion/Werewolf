@@ -6,6 +6,7 @@ using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using System.Windows;
 
+using Werewolf.Game;
 using Werewolf.Network.Events;
 using Werewolf.Network.Packets;
 using Werewolf.Views;
@@ -43,6 +44,7 @@ namespace Werewolf.Network
         public bool IsHost => Server.Instance.Started;
         public string IPAddressString { get; private set; }
         public EventManager<ServerToClientEventArgs> ServerEvents { get; private set; }
+        public Role Role { get; set; }
 
         private Client()
         {
@@ -57,6 +59,7 @@ namespace Werewolf.Network
             Name = string.Empty;
             IPAddressString = "<Not connected>";
             ServerEvents = new EventManager<ServerToClientEventArgs>();
+            Role = null;
         }
 
         public bool Connect(string name, IPAddress ipAddress)

@@ -5,12 +5,12 @@ namespace Werewolf.Game
 {
     public class Player : IEquatable<Player>
     {
-        private readonly User _user;
+        public User User { get; }
         private Role _role;
         private Tag _tag;
         private Team _overrideTeam;
 
-        public string Name => _user.Name;
+        public string Name => User.Name;
         public Role Role
         {
             get => _role;
@@ -20,7 +20,7 @@ namespace Werewolf.Game
 
         public Player(User user)
         {
-            _user = user;
+            User = user;
             _role = null;
             _tag = Werewolf.Game.Tag.NONE;
             _overrideTeam = null;

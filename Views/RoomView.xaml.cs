@@ -109,6 +109,7 @@ namespace Werewolf.Views
         private async void StartGame_Click(object sender, RoutedEventArgs e)
         {
             if (!Client.Instance.IsHost) return;
+            StartGame.IsEnabled = false;
 
             for (int i = 5; i >= 1; --i)
             {
@@ -121,11 +122,11 @@ namespace Werewolf.Views
 
         private void SendMessage_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Text = MessageBox.Text.Trim();
-            if (string.IsNullOrWhiteSpace(MessageBox.Text)) return;
+            Message.Text = Message.Text.Trim();
+            if (string.IsNullOrWhiteSpace(Message.Text)) return;
 
-            Client.Instance.SendEvent(new SendChatMessageEventArgs(MessageBox.Text));
-            MessageBox.Text = string.Empty;
+            Client.Instance.SendEvent(new SendChatMessageEventArgs(Message.Text));
+            Message.Text = string.Empty;
         }
 
         private void ChatBox_Scroll(object sender, ScrollEventArgs e) => _hasScroll = true;

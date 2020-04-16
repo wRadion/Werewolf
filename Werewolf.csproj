@@ -57,12 +57,18 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Game\Exceptions\NotEnoughRolesException.cs" />
+    <Compile Include="Game\Exceptions\NotEnoughWerewolfException.cs" />
+    <Compile Include="Game\Exceptions\TooMuchRolesException.cs" />
+    <Compile Include="Game\Exceptions\TooMuchWerewolfException.cs" />
     <Compile Include="Game\Game.cs" />
     <Compile Include="Game\Player.cs" />
     <Compile Include="Game\Role.cs" />
     <Compile Include="Game\Team.cs" />
     <Compile Include="Game\Tag.cs" />
     <Compile Include="Network\Events\ServerToClientEvents\GameStartedEventArgs.cs" />
+    <Compile Include="Network\Events\ServerToClientEvents\SetRoleEventArgs.cs" />
+    <Compile Include="Network\Events\ServerToClientEvents\TimerUpdatedEventArgs.cs" />
     <Compile Include="Utils\MessageBox.cs" />
     <Compile Include="Network\Events\ClientToServerEvents\ClientToServerEventArgs.cs" />
     <Compile Include="Network\Events\ClientToServerEvents\SendChatMessageEventArgs.cs" />
@@ -79,7 +85,6 @@
     <Compile Include="Network\Events\ServerToClientEvents\UserLeftEventArgs.cs" />
     <Compile Include="Network\Events\ServerToClientEvents\UserListSetEventArgs.cs" />
     <Compile Include="Network\Events\ServerToClientEvents\ChatMessageSentEventArgs.cs" />
-    <Compile Include="Network\Events\ServerToClientEvents\UserNameSetEventArgs.cs" />
     <Compile Include="Network\Exceptions\NameAlreadyTakenException.cs" />
     <Compile Include="Network\Exceptions\UnexpectedPacketException.cs" />
     <Compile Include="Network\Packets\Packet.cs" />
